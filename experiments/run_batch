@@ -1,0 +1,24 @@
+#!/bin/bash
+
+for d in 1 2 3 4
+do
+	for k in -16 -8 -4 -2 -1 0 1 2 4 8 16
+	do
+		kk=0
+		if [ "$k" -lt 0 ]; then
+			kk=$((-$k))
+		else
+			kk=$k
+		fi
+		base=$((2**$kk))
+		c=0
+		if [ "$k" -lt 0 ]; then
+			c=$(echo "1.0/$base" | bc -l)
+		else
+			c=$base
+		fi
+		filename=d=$(($d))_k=$(($k))_out.txt
+		echo "../../libsvm/svm-train -t 1 -d $d -c $c -v 10 ../spambase_train_parsed.scale > $filename"
+		../../libsvm/svm-train -t 1 -d $d -c $c -v 10 ../spambase_train_parsed.scale > $filename
+	done
+done

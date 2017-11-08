@@ -1,0 +1,81 @@
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999497
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999498
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999506
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999501
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999505
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999506
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999504
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999508
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999506
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+.
+WARNING: using -h 0 may be faster
+*
+optimization finished, #iter = 1053
+nu = 0.780000
+obj = -0.032134, rho = 0.999514
+nSV = 2106, nBSV = 2106
+Total nSV = 2106
+Cross Validation Accuracy = 61%

@@ -1,0 +1,133 @@
+experiments/d=1_k=-16_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=1_k=-8_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=1_k=-4_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=1_k=-2_out.txt:
+Cross Validation Accuracy = 62.9%
+
+experiments/d=1_k=-1_out.txt:
+Cross Validation Accuracy = 76.4%
+
+experiments/d=1_k=0_out.txt:
+Cross Validation Accuracy = 82.4667%
+
+experiments/d=1_k=1_out.txt:
+Cross Validation Accuracy = 85.1667%
+
+experiments/d=1_k=2_out.txt:
+Cross Validation Accuracy = 87.2667%
+
+experiments/d=1_k=4_out.txt:
+Cross Validation Accuracy = 90.3%
+
+experiments/d=1_k=8_out.txt:
+Cross Validation Accuracy = 92.6%
+
+experiments/d=1_k=16_out.txt:
+Cross Validation Accuracy = 92.5333%
+
+experiments/d=2_k=-16_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=2_k=-8_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=2_k=-4_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=2_k=-2_out.txt:
+Cross Validation Accuracy = 77.0333%
+
+experiments/d=2_k=-1_out.txt:
+Cross Validation Accuracy = 82.3%
+
+experiments/d=2_k=0_out.txt:
+Cross Validation Accuracy = 85.0667%
+
+experiments/d=2_k=1_out.txt:
+Cross Validation Accuracy = 87.0333%
+
+experiments/d=2_k=2_out.txt:
+Cross Validation Accuracy = 89.3667%
+
+experiments/d=2_k=4_out.txt:
+Cross Validation Accuracy = 91.1%
+
+experiments/d=2_k=8_out.txt:
+Cross Validation Accuracy = 92.8667%
+
+experiments/d=2_k=16_out.txt:
+Cross Validation Accuracy = 92.8333%
+
+experiments/d=3_k=-16_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=3_k=-8_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=3_k=-4_out.txt:
+Cross Validation Accuracy = 61.2667%
+
+experiments/d=3_k=-2_out.txt:
+Cross Validation Accuracy = 80.7333%
+
+experiments/d=3_k=-1_out.txt:
+Cross Validation Accuracy = 84%
+
+experiments/d=3_k=0_out.txt:
+Cross Validation Accuracy = 86%
+
+experiments/d=3_k=1_out.txt:
+Cross Validation Accuracy = 88.4667%
+
+experiments/d=3_k=2_out.txt:
+Cross Validation Accuracy = 89.9333%
+
+experiments/d=3_k=4_out.txt:
+Cross Validation Accuracy = 91.7333%
+
+experiments/d=3_k=8_out.txt:
+Cross Validation Accuracy = 92.9333%
+
+experiments/d=3_k=16_out.txt:
+Cross Validation Accuracy = 92.4333%
+
+experiments/d=4_k=-16_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=4_k=-8_out.txt:
+Cross Validation Accuracy = 61%
+
+experiments/d=4_k=-4_out.txt:
+Cross Validation Accuracy = 62.1%
+
+experiments/d=4_k=-2_out.txt:
+Cross Validation Accuracy = 81.9333%
+
+experiments/d=4_k=-1_out.txt:
+Cross Validation Accuracy = 84.7667%
+
+experiments/d=4_k=0_out.txt:
+Cross Validation Accuracy = 86.6333%
+
+experiments/d=4_k=1_out.txt:
+Cross Validation Accuracy = 89.2%
+
+experiments/d=4_k=2_out.txt:
+Cross Validation Accuracy = 90.4%
+
+experiments/d=4_k=4_out.txt:
+Cross Validation Accuracy = 92.1333%
+
+experiments/d=4_k=8_out.txt:
+Cross Validation Accuracy = 93.2333%
+
+experiments/d=4_k=16_out.txt:
+Cross Validation Accuracy = 92.2333%
+
+The best accuracy is 93.2333 at experiments/d=4_k=8_out.txt
