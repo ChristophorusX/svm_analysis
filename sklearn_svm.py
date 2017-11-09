@@ -30,8 +30,8 @@ def fetch_testing_data(filename):
     return fetch_training_data(filename)
 
 
-def train_svm(features, labels, c, d):
-    clf = sksvm.SVC(C=c, degree=d)
+def train_svm(features, labels, c, d, ker='poly'):
+    clf = sksvm.SVC(C=c, degree=d, kernel=ker)
     clf.fit(features, labels)
     return clf
 
@@ -44,10 +44,14 @@ def error_rate(true_labels, class_labels):
 
 
 def cross_validation_and_test(features, labels, c, d, testing_features, true_labels, ker):
+    print('Generating svc...')
     clf = sksvm.SVC(kernel=ker, C=c, degree=d)
-    scores = cross_val_score(clf, features, labels, cv=10)
+    print('Fitting the model...')
     clf.fit(features, labels)
+    print('Behaving cross validation...')
+    scores = cross_val_score(clf, features, labels, cv=10)
     support_vecs = clf.support_vectors_
+    print('Computing test error...')
     error = error_rate(true_labels, clf.predict(testing_features))
     return np.array(scores), error, np.array(support_vecs).shape[0]
 
@@ -59,8 +63,10 @@ def validation_with_parameters(features, labels, k_range, testing_features, true
     for d in range(1, 5):
         for k in k_range:
             c = 2**k
+            print('I am about to work...')
             scores, test_error, num_sup_vecs = cross_validation_and_test(
                 features, labels, c, d, testing_features, true_labels, ker)
+            print('I am done working this round...')
             errors = np.ones(10) - scores
             test_error_array.append(test_error)
             num_sup_vecs_array.append(num_sup_vecs)
@@ -151,27 +157,33 @@ def plot_sv(filename):
     plt.show()
 
 
-def kernel_gen(d):
-    return lambda x1, x2: (x1.dot(x2.T))**d
-
-
 def kernel_generator(i, j):
-    return lambda x1, x2: kernel_gen(i)(x1, x2) * kernel_gen(j)(x1, x2)
+    return lambda x1, x2: (x1.dot(x2.T))**i * (x1.dot(x2.T))**j
 
 
 def kernel_G4():
-    return lambda x1, x2: 1 / 10 * (kernel_generator(1, 1)(x1, x2) + kernel_generator(1, 2)(x1, x2) + kernel_generator(1, 3)(x1, x2) + kernel_generator(1, 4)(x1, x2) + kernel_generator(2, 2)(x1, x2) + kernel_generator(2, 3)(x1, x2) + kernel_generator(2, 4)(x1, x2) + kernel_generator(3, 3)(x1, x2) + kernel_generator(3, 4)(x1, x2) + kernel_generator(4, 4)(x1, x2))
+    poly_kernel = [kernel_generator(i, j)
+                   for i in range(1, 5) for j in range(i, 5)]
+
+    def compute_ker_val(x1, x2):
+        sum = 0
+        for func in poly_kernel:
+            sum += func(x1, x2)
+        return sum
+    return compute_ker_val
 
 
 if __name__ == '__main__':
     plt.xkcd()
-    features, labels=fetch_training_data('spambase_train_parsed.scale')
-    testing_features, true_labels=fetch_testing_data(
+    features, labels = fetch_training_data('spambase_train_parsed.scale')
+    testing_features, true_labels = fetch_testing_data(
         'spambase_test_parsed.scale')
-    k_range=[-16, -8, -4, -2, -1, 0, 1, 2, 4, 8, 16]
+    k_range = [-16, -8, -4, -2, -1, 0, 1, 2, 4, 8, 16]
     # validation_with_parameters(features, labels, k_range, testing_features,
     # true_labels)
-    validation_with_parameters(features, labels, k_range, testing_features, true_labels, ker=kernel_G4())
+    G4_kernel = kernel_G4()
+    validation_with_parameters(
+        features, labels, k_range, testing_features, true_labels, ker=G4_kernel)
     # plot_validation('cross_val_array_data_new.npy')
     # plot_validation('cross_val_array_kernel_data_new.npy')
     # cross_val_array = np.load('cross_val_array_data_new.npy')
@@ -183,8 +195,8 @@ if __name__ == '__main__':
     #         print(i + 1)
     # The best performance is at d=2, k=16
     # plot_against_d('cross_val_array_data_new.npy',
-    #                'test_error_array_data_new.npy')
+                   # 'test_error_array_data_new.npy')
     # plot_against_d('cross_val_array_kernel_data_new.npy',
-                #    'test_error_array_kernel_data_new.npy')
+    #    'test_error_array_kernel_data_new.npy')
     # plot_sv('support_vectors_data_new.npy')
     # plot_sv('support_vectors_kernel_data_new.npy')
