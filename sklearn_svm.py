@@ -1,59 +1,72 @@
 import numpy as np
-import re
+from sklearn import preprocessing
 import sklearn.svm as sksvm
 from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 
 
-def fetch_training_data(filename):
-    with open(filename, 'r') as f:
-        features = []
-        labels = []
-        for line in f:
-            container = line.rstrip().split(' ')
-            label = int(container[0])
-            del container[0]
-            pattern = re.compile(r"[-+]?\d+:([-+]?\d*\.\d+|[-+]?\d+)")
-            feature = []
-            for phrase in container:
-                target = re.findall(pattern, phrase)
-                feature.append(float(target[0]))
-            if len(feature) == 57:
-                features.append(feature)
-                labels.append(label)
-        features = np.array(features)
-        labels = np.array(labels)
-        return features, labels
+# def fetch_training_data(filename):
+#     with open(filename, 'r') as f:
+#         features = []
+#         labels = []
+#         for line in f:
+#             container = line.rstrip().split(' ')
+#             label = int(container[0])
+#             del container[0]
+#             pattern = re.compile(r"[-+]?\d+:([-+]?\d*\.\d+|[-+]?\d+)")
+#             feature = []
+#             for phrase in container:
+#                 target = re.findall(pattern, phrase)
+#                 feature.append(float(target[0]))
+#             if len(feature) == 57:
+#                 features.append(feature)
+#                 labels.append(label)
+#         features = np.array(features)
+#         labels = np.array(labels)
+#         return features, labels
 
 
-def fetch_testing_data(filename):
-    return fetch_training_data(filename)
+# def fetch_testing_data(filename):
+#     return fetch_training_data(filename)
 
 
-def train_svm(features, labels, c, d, ker='poly'):
-    clf = sksvm.SVC(C=c, degree=d, kernel=ker)
-    clf.fit(features, labels)
-    return clf
+# def train_svm(features, labels, c, d, ker='poly'):
+#     clf = sksvm.SVC(C=c, degree=d, kernel=ker)
+#     clf.fit(features, labels)
+#     return clf
 
 
-def error_rate(true_labels, class_labels):
-    sample_size = class_labels.shape
-    error = np.sum(np.abs(true_labels - class_labels)) / 2
-    rate = error / sample_size
-    return rate
+# def error_rate(true_labels, class_labels):
+#     sample_size = class_labels.shape
+#     error = np.sum(np.abs(true_labels - class_labels)) / 2
+#     rate = error / sample_size
+#     return rate
+
+
+def fetch_data_from_raw(filename):
+    data = np.loadtxt(filename, delimiter=',')
+    data_train_feature = data[:3000, :57]
+    data_train_label = data[:3000, 57]
+    data_test_feature = data[3000:, :57]
+    data_test_label = data[3000:, 57]
+    scaler = preprocessing.MinMaxScaler(feature_range = (-1, 1))
+    scaler.fit_transform(data_train_feature)
+    data_train_feature = scaler.transform(data_train_feature)
+    data_test_feature = scaler.transform(data_test_feature)
+    return data_train_feature, data_train_label, data_test_feature, data_test_label
 
 
 def cross_validation_and_test(features, labels, c, d, testing_features, true_labels, ker):
     print('Generating svc...')
     clf = sksvm.SVC(kernel=ker, C=c, degree=d)
     print('Behaving cross validation...')
-    scores = cross_val_score(clf, features, labels, cv=10)
+    errors = np.ones(10) - cross_val_score(clf, features, labels, cv=10)
     print('Fitting the model...')
     clf.fit(features, labels)
     support_vecs = clf.support_vectors_
     print('Computing test error...')
-    error = error_rate(true_labels, clf.predict(testing_features))
-    return np.array(scores), error, np.array(support_vecs).shape[0]
+    error = 1 - clf.score(testing_features, true_labels)
+    return errors, error, np.array(support_vecs).shape[0]
 
 
 def validation_with_parameters(features, labels, k_range, testing_features, true_labels, ker='poly'):
@@ -64,18 +77,14 @@ def validation_with_parameters(features, labels, k_range, testing_features, true
         for k in k_range:
             c = 2**k
             print('I am about to work...')
-            scores, test_error, num_sup_vecs = cross_validation_and_test(
+            errors, test_error, num_sup_vecs = cross_validation_and_test(
                 features, labels, c, d, testing_features, true_labels, ker)
             print('I am done working this round...')
-            errors = np.ones(10) - scores
-            test_error_array.append(test_error)
+            test_error_array.append([test_error, k, d])
             num_sup_vecs_array.append(num_sup_vecs)
-            sum_error = np.sum(errors)
-            mean = sum_error / 10
-            for i in range(errors.shape[0]):
-                errors[i] = (errors[i] - mean)**2 / 10
-            deviation = np.sqrt(np.sum(errors))
-            data = np.array([mean, mean + deviation, mean - deviation, k])
+            mean = errors.mean()
+            deviation = errors.std()
+            data = np.array([mean, mean + deviation, mean - deviation, k, d])
             cross_val_array.append(data)
             # model = train_svm(features, labels, c, d)
             # class_labels = np.array(model.predict(testing_features))
@@ -98,18 +107,18 @@ def plot_validation(filename):
     cross_val_array = np.load(filename)
     plt.style.use('ggplot')
     f, axarr = plt.subplots(4, figsize=(10, 20))
-    for i in range(4):
-        matrix = cross_val_array[i * 11:(i + 1) * 11, :]
-        axarr[i].plot(matrix[:, 3], matrix[:, 0],
+    for d in range(1, 5):
+        matrix = cross_val_array[(d - 1) * 11:d * 11, :]
+        axarr[d - 1].plot(matrix[:, -2], matrix[:, 0],
                       label='Average cross validation error', marker='D')
-        axarr[i].plot(matrix[:, 3], matrix[:, 1],
+        axarr[d - 1].plot(matrix[:, -2], matrix[:, 1],
                       label='Plus standard deviation', marker='^', linestyle='-.')
-        axarr[i].plot(matrix[:, 3], matrix[:, 2],
+        axarr[d - 1].plot(matrix[:, -2], matrix[:, 2],
                       label='Minus standard deviation', marker='v', linestyle='-.')
-        axarr[i].legend()
-        axarr[i].set_title(
-            'Cross Validation Result on Polynomial Kernels with Degree ' + str(i + 1))
-        axarr[i].grid(True, which='both')
+        axarr[d - 1].legend()
+        axarr[d - 1].set_title(
+            'Cross Validation Result on Polynomial Kernels with Degree ' + str(d))
+        axarr[d - 1].grid(True, which='both')
     plt.tight_layout()
     if filename == 'cross_val_array_data_new.npy':
         plt.savefig('validation_result.png', dpi=200)
@@ -122,15 +131,15 @@ def plot_against_d(validation_filename, test_filename):
     cross_val_array = np.load(validation_filename)
     test_error_array = np.load(test_filename)
     plt.style.use('ggplot')
-    for i in range(4):
+    for d in range(1, 5):
         xaxis = [1, 2, 3, 4]
-        point = 10
-        arr = cross_val_array[point::11, 1]
-        tarr = test_error_array[point::11]
+        starting_pt = 10
+        arr = cross_val_array[starting_pt::11, 0]
+        test_arr = test_error_array[starting_pt::11, 0]
         vali, = plt.plot(xaxis, arr, marker='D')
-        tes, = plt.plot(xaxis, tarr, marker='D')
+        tes, = plt.plot(xaxis, test_arr, marker='D')
         plt.legend([vali, tes], [
-                   'Average cross validation error for k=16', 'Test error for k=16'])
+                   'Average cross validation error for k=9', 'Test error for k=9'])
         plt.title(
             'Cross Validation and Test Error Result on Polynomial Kernels')
         plt.grid(True, which='both')
@@ -175,12 +184,10 @@ def kernel_G4():
 
 if __name__ == '__main__':
     # plt.xkcd()
-    features, labels = fetch_training_data('spambase_train_parsed.scale')
-    testing_features, true_labels = fetch_testing_data(
-        'spambase_test_parsed.scale')
-    k_range = [-16, -8, -4, -2, -1, 0, 1, 2, 4, 8, 16]
-    # validation_with_parameters(features, labels, k_range, testing_features,
-    # true_labels)
+    features, labels, testing_features, true_labels = fetch_data_from_raw('spambase')
+    k_range = [-9, -8, -4, -2, -1, 0, 1, 2, 4, 8, 9]
+    validation_with_parameters(features, labels, k_range, testing_features,
+    true_labels)
     # G4_kernel = kernel_G4()
     # validation_with_parameters(
     #     features, labels, k_range, testing_features, true_labels, ker=G4_kernel)
