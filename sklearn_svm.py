@@ -46,10 +46,10 @@ def error_rate(true_labels, class_labels):
 def cross_validation_and_test(features, labels, c, d, testing_features, true_labels, ker):
     print('Generating svc...')
     clf = sksvm.SVC(kernel=ker, C=c, degree=d)
-    print('Fitting the model...')
-    clf.fit(features, labels)
     print('Behaving cross validation...')
     scores = cross_val_score(clf, features, labels, cv=10)
+    print('Fitting the model...')
+    clf.fit(features, labels)
     support_vecs = clf.support_vectors_
     print('Computing test error...')
     error = error_rate(true_labels, clf.predict(testing_features))
@@ -174,17 +174,17 @@ def kernel_G4():
 
 
 if __name__ == '__main__':
-    plt.xkcd()
+    # plt.xkcd()
     features, labels = fetch_training_data('spambase_train_parsed.scale')
     testing_features, true_labels = fetch_testing_data(
         'spambase_test_parsed.scale')
     k_range = [-16, -8, -4, -2, -1, 0, 1, 2, 4, 8, 16]
     # validation_with_parameters(features, labels, k_range, testing_features,
     # true_labels)
-    G4_kernel = kernel_G4()
-    validation_with_parameters(
-        features, labels, k_range, testing_features, true_labels, ker=G4_kernel)
-    # plot_validation('cross_val_array_data_new.npy')
+    # G4_kernel = kernel_G4()
+    # validation_with_parameters(
+    #     features, labels, k_range, testing_features, true_labels, ker=G4_kernel)
+    plot_validation('cross_val_array_data_new.npy')
     # plot_validation('cross_val_array_kernel_data_new.npy')
     # cross_val_array = np.load('cross_val_array_data_new.npy')
     # print(cross_val_array)
@@ -194,9 +194,9 @@ if __name__ == '__main__':
     #     if cross_val_array[i, 0] == minimum:
     #         print(i + 1)
     # The best performance is at d=2, k=16
-    # plot_against_d('cross_val_array_data_new.npy',
-                   # 'test_error_array_data_new.npy')
+    plot_against_d('cross_val_array_data_new.npy',
+                   'test_error_array_data_new.npy')
     # plot_against_d('cross_val_array_kernel_data_new.npy',
     #    'test_error_array_kernel_data_new.npy')
-    # plot_sv('support_vectors_data_new.npy')
+    plot_sv('support_vectors_data_new.npy')
     # plot_sv('support_vectors_kernel_data_new.npy')
